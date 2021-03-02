@@ -2,11 +2,12 @@ namespace SpriteKind {
     export const powerUps = SpriteKind.create()
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.powerUps, function (sprite, otherSprite) {
+    otherSprite.destroy()
     Bullets = 5
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Bullets > 0) {
-        projectile = sprites.createProjectileFromSprite(img`
+        Bullet = sprites.createProjectileFromSprite(img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
@@ -24,6 +25,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             `, Paddle, 0, 50)
+        Bullets += -1
+        Paddle.say(Bullets)
     }
 })
 info.onCountdownEnd(function () {
@@ -57,7 +60,7 @@ scene.onHitWall(SpriteKind.Projectile, function (sprite, location) {
                 . . . . . . . . . . . . . . . . 
                 `, SpriteKind.powerUps)
             tiles.placeOnTile(PowerIcon, location)
-            PowerIcon.vy = 10
+            PowerIcon.vy = 25
         }
         if (info.score() == 20) {
             tiles.setTilemap(tilemap`level3`)
@@ -70,8 +73,10 @@ scene.onHitWall(SpriteKind.Projectile, function (sprite, location) {
         StartBall()
     }
 })
-scene.onOverlapTile(SpriteKind.powerUps, sprites.dungeon.hazardLava0, function (sprite, location) {
-    sprite.destroy(effects.disintegrate, 200)
+scene.onHitWall(SpriteKind.powerUps, function (sprite, location) {
+    if (tiles.tileAtLocationEquals(location, sprites.dungeon.hazardLava0)) {
+        sprite.destroy(effects.disintegrate, 200)
+    }
 })
 function StartBall () {
     Ball.setVelocity(0, 0)
@@ -79,7 +84,7 @@ function StartBall () {
     info.startCountdown(2)
 }
 let PowerIcon: Sprite = null
-let projectile: Sprite = null
+let Bullet: Sprite = null
 let Bullets = 0
 let Ball: Sprite = null
 let Paddle: Sprite = null
