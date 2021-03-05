@@ -24,7 +24,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            `, Paddle, 0, 50)
+            `, Paddle, 0, 100)
         Bullets += -1
         Paddle.say(Bullets)
     }
